@@ -1,1 +1,11 @@
-LIBRERÍAS NECESARIAS PARA EL PROYECTO
+LIBRERÍAS NECESARIAS PARA EL PROYECTO:
+
+- Numpy
+- Pandas
+- MatplotLib
+- Seaborn
+- Imblearn
+- Scikit Learn
+- XGBoost
+- LightGBM
+- Joblib
