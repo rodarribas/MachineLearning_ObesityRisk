@@ -4,24 +4,18 @@
 import pandas as pd
 import numpy as np
 
-# Modelos
-from sklearn.model_selection import train_test_split, cross_val_score, cross_validate
-# from sklearn.linear_model import LogisticRegression
-# from sklearn.model_selection import GridSearchCV
-# from sklearn.svm import SVC
-# from sklearn.tree import DecisionTreeClassifier
-# from sklearn.neighbors import KNeighborsClassifier
+# Modelos y métricas
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 from xgboost import XGBClassifier
-# from catboost import CatBoostClassifier
 import lightgbm as lgb
-from sklearn.ensemble import RandomForestClassifier, VotingClassifier, BaggingClassifier
-# from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, f1_score, precision_score, recall_score, \
-# roc_curve, roc_auc_score, ConfusionMatrixDisplay, multilabel_confusion_matrix
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 
 # Procesado
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 
 # Otros
+import joblib
 import warnings
 warnings.filterwarnings('ignore')
 # ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -113,13 +107,13 @@ X_train, X_test, y_train, y_test = train_test_split(df.drop(columns=['nobeyesdad
                                                     stratify=df['nobeyesdad'])
 
 # Instanciación de modelos
-# LGBM_1 = lgb.LGBMClassifier(num_leaves=,
-#               learning_rate=,
-#               n_estimators=,
-#               max_depth=,
-#               min_child_samples=,
-#               subsample=,
-#               colsample_bytree=)
+LGBM_1 = lgb.LGBMClassifier(num_leaves=50,
+              learning_rate=0.1,
+              n_estimators=100,
+              max_depth=5,
+              min_child_samples=30,
+              subsample=0.8,
+              colsample_bytree=1.0)
 
 
 XGB_1 = XGBClassifier(n_estimators=100,
@@ -135,13 +129,19 @@ RF_1 = RandomForestClassifier(n_estimators=150,
               min_samples_leaf=4,
               bootstrap=True)
 
-
+# Voting ensemble
 voting_clf = VotingClassifier(
-    estimators=[('lgbm', lgb.LGBMClassifier()),
+    estimators=[('lgbm', LGBM_1),
                 ('xgb', XGB_1),
                 ('rf', RF_1),],
     voting='soft',
     verbose=False)
 
-
+# Entrenamiento y validación
 voting_clf.fit(X_train, y_train)
+print(f'El modelo entrenado tiene un accuracy de {accuracy_score(y_test, voting_clf.predict(X_test))} sobre el test')
+# ------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# GUARDADO
+joblib.dump(voting_clf, r'.\models\new_model.sav')
