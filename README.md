@@ -1,5 +1,6 @@
 # Machine Learning: Obesity Risk
-Proyecto de Machine Learning para predecir el riesgo de obesidad en base a los datos recogidos en una encuesta online sobre hábitos de consumo en México, Perú y Colombia.  <br>
+Proyecto de Machine Learning para predecir el **riesgo de obesidad** en base a los datos recogidos en una encuesta online sobre hábitos de consumo en México, Perú y Colombia.  <br>
+<br>
 Se proponen 3 modelos:
 - **Modelo 1**: el mejor modelo, basado en la selección de variables de acuerdo a un heatmap, logaritmo, escalado MinMax, grid search de los 3 mejores modelos resultantes del baseline y encapsulación en un voting ensemble.
 - **Modelo 2**: se hizo un undersampling manual de la target más numerosa basado en el EDA. Posteriormente un RandomOversampling para equilibrar totalmente la target y finalmente un PCA. Tras aplicar LGBM al dataset resultante, no se obtuvieron mejores resultados que en el Modelo_1 (en fase baseline).
